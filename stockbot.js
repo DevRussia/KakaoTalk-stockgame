@@ -11,8 +11,9 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
       return prefix+ctx;
   }
 
-  const stockList = {
-      company1:{
+  let StockData = {
+  "StockList":{
+  company1:{
           current_price:3400,
           original_price:3400,
           volatility:"auto",
@@ -24,59 +25,39 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
           volatility:"auto",
           change_type:"auto"
       }
+  },
+  "userdata" : {}
   }
 
-  path="/sdcard/StockBot";
-  const setting = {
-      userpath:path+"/"+profile+" ("+sender+").txt",
-      userfile:{
-          name:sender,
-          nick:sender,
-          money:1000000,
-          data:{
-              mystock:{}, //나중에 회사명:보유주식수 로 대입할 예정
-              mycompany:{} //내회사 정보
-          }
-      },
-      stockpath:path+"/stock.txt",
-      message:[
-          '가입되셨습니다',
-          '이미 가입하셨습니다.',
-          '현재 해당 주식은 전체 매수 한도선을 초과하여 매도가 불가합니다',
-          '돈이 부족하여 주식 상장을 할수 없습니다',
-          '돈이 부족하여 해당 주식을 매도할수 없습니다.',
-          '해당 주식 매도 한도선을 초과하여 매도할수 없습니다',
-          '해당 주식명은 존재하지 않습니다',
-          '상장폐지된 주식의 이름으로 상장할수 없습니다',
-          '해당 주식은 상장 폐지되어 구매할수 없습니다',
-          '오류가 발생하였습니다. 잠시 이용을 멈춰주세요.'
-      ]
-  }
 
-  const user = {};
-  user[profile] = JSON.parse(FileStream.read(setting.userpath));
-  if(user[profile]==null){
-      FileStream.write(setting.userpath,JSON.stringify(setting.userfile))
-  }
-  save = function(){
-    FileStream.write(setting.userpath,JSON.stringify(user[profile]));
-  }
 
-  java.io.File(path).mkdirs() //최상위 경로 폴더 만듬
+ 
 
-  const stockfile = JSON.parse(FileStream.read(setting.stockpath))
-  if(stockfile==null){ //stock 파일이 미존재한다면
-      FileStream.write(setting.stockpath,JSON.stringify(stockList)) //stockList를 해당 파일에 넣어버린다.
-  }
 
   function StockGame(){
-      this.path=path;
-      this.userpath=setting.userpath;
-      this.stockpath=setting.stockpath;
+      this.path="sdcard/StockBot/StockData.json";
+      this.usersetting = {
+      "username" : sender,
+      "usermoney" : 100000,
+      "ownstock" : {},
+      "owncompany" :{}
+      }
+      this.message = [
+        '가입 완료했습니다.', 
+        '이미 가입했습니다.', 
+        '가입 먼저 해주세요.', 
+        '매매하려는 종목을 찾을 수 없습니다.', 
+        '자연수만 입력해주세요.',
+        '주문 가능 물량을 초과했습니다.\n주문 가능 수량: ',
+        '매도 가능 물량을 초과했습니다.\n매도 가능 수량: ',
+        '매도 가능 물량이 없습니다.',
+        '상장 폐지된 주식은 매매 할 수 없습니다.'
+    ];
   }
 
-  function Math(){
-  }
+function Math(){
+}
+  
 
   Math.prototype.isint = function(check){
       this.check=check;
@@ -85,10 +66,15 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
               return true;
           }else{
               return '정수를 입력해주세요. 소수를 입력하신것 같습니다';
-          }
+          } 
       }else{
           return '숫자를 입력해주세요. 문자열을 입력하셨습니다.';
       }
+  }
+
+  StockGame.prototype.fs = function(path , data){
+    if(!data) return JSON.parse(FileStream.read(path));
+    return FileStream.write(path, JSON.stringify(data, null, 4));
   }
 
   StockGame.prototype.existence = function(name){

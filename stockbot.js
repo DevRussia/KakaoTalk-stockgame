@@ -1,5 +1,7 @@
 const scriptName = "stockbot";
 
+const Game = new StockGame();
+
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
 
   //simpcode and 베타맥스
@@ -118,7 +120,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
       }
   }
 
-  Game = new StockGame();
+  
   let cmd = msg.split(" ");
   if(cmd[0]==Command("주식")){
       if(cmd[1]=="가입"){

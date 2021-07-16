@@ -5,6 +5,8 @@
 > 사용전 주의하실 점이 있습니다 <a href="#주의사항">이곳을 클릭하여</a> 자세히 알아보세요
 
 # KakaoTalk-stockgame
+![GitHub Repo stars](https://img.shields.io/github/stars/DevRussia/KakaoTalk-stockgame?style=flat-square) 잘 이용하고 계신다면 star 한번 해주세요!
+
 메신저봇에서 동작하는 카카오톡 주식게임봇입니다. 누구나 <a href="#추신">추신 부분</a> 그리고, MIT 라이선스를 준수하신다면, 누구나 사용이 가능한 소스입니다. 이 둘을 지킬 용기가 없으시다면, 사용하지 말아주시기 바라겠습니다.
 
 이슈보고는 이슈 페이지에서 해주세요, 또한 문의나 궁금한점이 있으시다면 이슈 페이지로 알려주신다면 최대한 빠르게 연락드리겠습니다.

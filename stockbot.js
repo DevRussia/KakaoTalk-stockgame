@@ -2,6 +2,7 @@ const scriptName = "stockbot";
 
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
     //simpcode and 베타맥스
+    const RealCompany = ["lg","삼성","samsung","삼성전자","samsungelectronics","samsung electronics","samsung electronics co., ltd.","samsungelectronicsco.,ltd.","얀덱스","yandex","유튜브","youtube","tesla","테슬라","구글","구글번역","구글 번역","google","한화","hanwha","쿠팡","coupang"]
     const COMPRESS = "\u200b".repeat(500);
     const profile = java.lang.String(imageDB.getProfileImage()).hashCode();
     const prefix = "/"//명령어 접두사.
@@ -83,9 +84,16 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
     }
 
     StockGame.prototype.existence = function(name){
+        down = name.toLowerCase();
         if(StockData["StockList"][name]!==undefined){
             return true
-        }else return false;
+        }else{
+            if(RealCompany.indexOf(down)!=-1){
+                return name+"은(는) 유명한 회사의 이름 혹은 진짜 있는 회사의 이름이기에, 이 주식겜 내에서 이 이름은 회사명으로 사용이 금지되어 있습니다"
+            }else{
+                return "없는 회사입니다."
+            }
+        }
     }
 
     StockGame.prototype.buy = function(company,num){
@@ -143,7 +151,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                         replier.reply(room,math.isint(cmd[3]),true)
                     }
                 }else{
-                    replier.reply(room,"존재하지 않는 회사입니다!",true)
+                    replier.reply(room,Game.existence(cmd[2]),true)
                 }
             }else{
                 replier.reply(room,Game.IsJoined(),true)

@@ -1,129 +1,154 @@
 const scriptName = "stockbot";
 
-const Game = new StockGame();
-
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
+    //simpcode and 베타맥스
+    const profile = java.lang.String(imageDB.getProfileImage()).hashCode();
+    const prefix = "/"//명령어 접두사.
+    var Command = function(ctx){
+        return prefix+ctx;
+    }
 
-  //simpcode and 베타맥스
-  const profile = java.lang.String(imageDB.getProfileImage()).hashCode();
-  const prefix = "/"//명령어 접두사.
-  var Command = function(ctx){
-      return prefix+ctx;
-  }
+    let StockData = {
+        StockList:{
+            company1:{
+                current_price:3400,
+                original_price:3400,
+                volatility:"auto",
+                change_type:"auto"
+            },
+            betamax:{
+                current_price:18400,
+                original_price:18400,
+                volatility:"auto",
+                change_type:"auto"
+            }
+        },
+        userdata: {}
+    }
+    function StockGame(){
+        this.path="sdcard/StockBot/StockData.json";
+        this.userpath="sdcard/StockBot/users/"+profile+" ("+sender+").txt"
+        this.userfile=JSON.parse(FileStream.read(this.userpath))
+        this.usersetting = {
+            username: sender,
+            usermoney: 100000,
+            ownstock: {},
+            owncompany:{}
+        }
+        this.message = [
+            '가입 완료했습니다.', 
+            '이미 가입했습니다.', 
+            '가입 먼저 해주세요.', 
+            '매매하려는 종목을 찾을 수 없습니다.', 
+            '자연수만 입력해주세요.',
+            '주문 가능 물량을 초과했습니다.\n주문 가능 수량: ',
+            '매도 가능 물량을 초과했습니다.\n매도 가능 수량: ',
+            '매도 가능 물량이 없습니다.',
+            '상장 폐지된 주식은 매매 할 수 없습니다.'
+        ];
+    }
+    const Game = new StockGame();
+    //세이브 함수 지우지마!!
+    save = function(){
+        FileStream.write(Game.userpath,JSON.stringify(Game.userfile));
+    }    
 
-  let StockData = {
-  "StockList":{
-  company1:{
-          current_price:3400,
-          original_price:3400,
-          volatility:"auto",
-          change_type:"auto"
-      },
-      betamax:{
-          current_price:18400,
-          original_price:18400,
-          volatility:"auto",
-          change_type:"auto"
-      }
-  },
-  "userdata" : {}
-  }
 
+    if(JSON.parse(FileStream.read(Game.path))==null){
+        FileStream.write(Game.path, JSON.stringify(StockData));
+    }
 
+    function Math(){
+    }
 
- 
-
-
-  function StockGame(){
-      this.path="sdcard/StockBot/StockData.json";
-      this.usersetting = {
-      "username" : sender,
-      "usermoney" : 100000,
-      "ownstock" : {},
-      "owncompany" :{}
-      }
-      this.message = [
-        '가입 완료했습니다.', 
-        '이미 가입했습니다.', 
-        '가입 먼저 해주세요.', 
-        '매매하려는 종목을 찾을 수 없습니다.', 
-        '자연수만 입력해주세요.',
-        '주문 가능 물량을 초과했습니다.\n주문 가능 수량: ',
-        '매도 가능 물량을 초과했습니다.\n매도 가능 수량: ',
-        '매도 가능 물량이 없습니다.',
-        '상장 폐지된 주식은 매매 할 수 없습니다.'
-    ];
-  }
-
-function Math(){
-}
-  
-
-  Math.prototype.isint = function(check){
-      this.check=check;
-      if(isNaN(this.check)==false){
-          if(Number.isInteger(Number(this.check))==true){
-              return true;
-          }else{
-              return '정수를 입력해주세요. 소수를 입력하신것 같습니다';
-          } 
-      }else{
-          return '숫자를 입력해주세요. 문자열을 입력하셨습니다.';
-      }
-  }
-
-  StockGame.prototype.fs = function(path , data){
-    if(!data) return JSON.parse(FileStream.read(path));
-    return FileStream.write(path, JSON.stringify(data, null, 4));
-  }
-
-  StockGame.prototype.existence = function(name){
-      if(stockList[name]!==undefined){
-          return true
-      }else return false;
-  }
-
-  StockGame.prototype.buy = function(company,num){
-    let orderprice = stockList[company]["current_price"] * num;
-    if(orderprice>user[profile]["money"]){
-        return setting.message[4];
-    }else{
-        user[profile]["money"] -= orderprice;
-        if(user[profile]["data"]["mystock"][company]!==undefined){
-            user[profile]["data"]["mystock"][company]+=num;
-            save();
-            return company+"의 주식 "+num+"주를 구매하였습니다";
+    Math.prototype.isint = function(check){
+        this.check=check;
+        if(isNaN(this.check)==false){
+            if(Number.isInteger(Number(this.check))==true){
+                return true;
+            }else{
+                return '정수를 입력해주세요. 소수를 입력하신것 같습니다';
+            } 
+        }else{
+            return '숫자를 입력해주세요. 문자열을 입력하셨습니다.';
         }
     }
-  }
 
-  StockGame.prototype.CreateAccount = function(){
-      if(FileStream.read(setting.userpath)==null){
-          FileStream.write(setting.userpath,JSON.stringify(setting.userfile))
-          return setting.message[0];
-      }else{
-          return setting.message[1];
-      }
-  }
+    StockGame.prototype.fs = function(path , data){
+        if(!data) return JSON.parse(FileStream.read(path));
+        return FileStream.write(path, JSON.stringify(data, null, 4));
+    }
 
+    StockGame.prototype.existence = function(name){
+        if(StockData["StockList"][name]!==undefined){
+            return true
+        }else return false;
+    }
+
+    StockGame.prototype.buy = function(company,num){
+        let orderprice = StockData["StockList"][company]["current_price"] * num;
+        if(orderprice>this.userfile["usermoney"]){
+            i = orderprice-this.userfile["usermoney"]
+            return "돈이 "+i+"만큼 부족하여 구매할수 없습니다";
+        }else{
+            this.userfile["usermoney"] -= orderprice;
+            if(this.userfile["ownstock"][company]!==undefined){
+                this.userfile["ownstock"][company]+=num;
+                save();
+                return company+"의 주식 "+num+"주를 구매하였습니다";
+            }else{
+                this.userfile["ownstock"][company]=num;
+                save();
+                return company+"의 주식 "+num+"주를 구매하였습니다";
+            }
+        }
+    }
+
+    StockGame.prototype.MyMoney = function(){
+        return this.userfile["usermoney"];
+    }
+
+    StockGame.prototype.IsJoined = function(){
+        if(FileStream.read(this.userpath)!==null){
+            return true
+        }else{
+            return "가입해주세요"
+        }
+    }
+
+    StockGame.prototype.CreateAccount = function(){
+        if(FileStream.read(this.userpath)==null){
+            FileStream.write(this.userpath,JSON.stringify(this.usersetting))
+            return this.message[0];
+        }else{
+            return this.message[1];
+        }
+    }
   
-  let cmd = msg.split(" ");
-  if(cmd[0]==Command("주식")){
-      if(cmd[1]=="가입"){
-          replier.reply(room,StockGame.CreateAccount(),true);
-      }else{
-          replier.reply("없는 명령어입니다.")
-      }
-  }else if(cmd[1]=="매수"){
-      if(StockGame.existence(cmd[2])==true){
-          if(Math.isint(cmd[3])==true){
-              buynum = Number(cmd[3]);
-              StockGame.buy(cmd[2],buynum);
-          }else{
-              replier.reply(room,Math.isint(cmd[3]),true)
-          }
-      }else{
-          replier.reply(room,"존재하지 않는 회사입니다!",true)
-      }
-  }
+    math = new Math();
+    let cmd = msg.split(" ");
+    if(cmd[0]==Command("주식")){
+        if(cmd[1]=="가입"){
+            replier.reply(room,Game.CreateAccount(),true);
+        }else if(cmd[1]=="매수"){
+            if(Game.IsJoined()==true){
+                if(Game.existence(cmd[2])==true){
+                    if(math.isint(cmd[3])==true){
+                        buynum = Number(cmd[3]);
+                        replier.reply(Game.buy(cmd[2],buynum))
+                    }else{
+                        replier.reply(room,math.isint(cmd[3]),true)
+                    }
+                }else{
+                    replier.reply(room,"존재하지 않는 회사입니다!",true)
+                }
+            }else{
+                replier.reply(room,Game.IsJoined(),true)
+            }
+        }else if(cmd[1]=="지갑"||cmd[1]=="ㅈㄱ"||cmd[1]=="돈"){
+            replier.reply(room,sender+"님이 보유하고 있는 코인은 "+Game.MyMoney()+"입니다.")
+        }else{
+            replier.reply("없는 명령어입니다.")
+        }
+    }
 }

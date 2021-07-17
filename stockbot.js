@@ -151,7 +151,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                         buynum = Number(cmd[3]);
                         replier.reply(Game.buy(cmd[2],buynum))
                     }else{
-                        replier.reply(room,Math.isint(cmd[3]),true)
+                        replier.reply(room,ath.isint(cmd[3]),true)
                     }
                 }else{
                     replier.reply(room,Game.existence(cmd[2]),true)

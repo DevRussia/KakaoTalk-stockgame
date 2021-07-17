@@ -16,13 +16,15 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 current_price:3400,
                 original_price:3400,
                 volatility:"auto",
-                change_type:"auto"
+                change_type:"auto",
+                maximum : 100
             },
             betamax:{
                 current_price:18400,
                 original_price:18400,
                 volatility:"auto",
-                change_type:"auto"
+                change_type:"auto",
+                maximum : 200
             }
         },
         userdata: {}
@@ -45,8 +47,9 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
             '가입 먼저 해주세요.', 
             '매매하려는 종목을 찾을 수 없습니다.', 
             '자연수만 입력해주세요.',
-            '주문 가능 물량을 초과했습니다.\n주문 가능 수량: ',
+            '매수 가능 물량을 초과했습니다.\n주문 가능 수량: ',
             '매도 가능 물량을 초과했습니다.\n매도 가능 수량: ',
+            '매수 가능 물량이 없습니다.',
             '매도 가능 물량이 없습니다.',
             '상장 폐지된 주식은 매매 할 수 없습니다.'
         ];
@@ -104,7 +107,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         }else{
             this.userfile["usermoney"] -= orderprice;
             if(this.userfile["ownstock"][company]!==undefined){
-                this.userfile["ownstock"][company]+=num;
+                this.userfile["ownstock"][company]+=nu
                 save();
                 return company+"의 주식 "+num+"주를 구매하였습니다";
             }else{
@@ -144,11 +147,11 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
         }else if(cmd[1]=="매수"){
             if(Game.IsJoined()==true){
                 if(Game.existence(cmd[2])==true){
-                    if(math.isint(cmd[3])==true){
+                    if(Math.isint(cmd[3])==true){
                         buynum = Number(cmd[3]);
                         replier.reply(Game.buy(cmd[2],buynum))
                     }else{
-                        replier.reply(room,math.isint(cmd[3]),true)
+                        replier.reply(room,Math.isint(cmd[3]),true)
                     }
                 }else{
                     replier.reply(room,Game.existence(cmd[2]),true)

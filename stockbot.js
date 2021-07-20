@@ -17,14 +17,16 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
                 original_price:3400,
                 volatility:"auto",
                 change_type:"auto",
-                maximum : 100
+                maximum : 100,
+                amount :0
             },
             betamax:{
                 current_price:18400,
                 original_price:18400,
                 volatility:"auto",
                 change_type:"auto",
-                maximum : 200
+                maximum : 200,
+                amount : 0
             }
         },
         userdata: {}
